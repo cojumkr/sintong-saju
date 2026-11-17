@@ -49,12 +49,12 @@
 .bookingConfirm .details strong{display:block;font-size:16px;margin-bottom:3px}
 .bookingConfirm .explain{font-size:13px;color:#61736a;line-height:1.6;margin:0 0 17px}
 </style></head><body>
-<header class="hero"><div class="wrap head"><div class="brandCluster"><div><div class="brand">神通 四柱</div><h1>신지암신통사주</h1><p>마음 편한 상담, 간편한 예약</p><span class="versionBadge" aria-label="현재 버전">v6.0</span></div><span class="luckCharacter" aria-label="복 복(福), 행복과 행운을 기원합니다" role="img">福</span></div><nav class="nav"><button id="guestNav" class="active">상담 예약</button><button id="lookupNav">예약 조회</button><button id="adminNav">관리자</button></nav></div></header>
+<header class="hero"><div class="wrap head"><div class="brandCluster"><div><div class="brand">神通 四柱</div><h1>신지암신통사주</h1><p>마음 편한 상담, 간편한 예약</p><span class="versionBadge" aria-label="현재 버전">v6.1</span></div><span class="luckCharacter" aria-label="복 복(福), 행복과 행운을 기원합니다" role="img">福</span></div><nav class="nav"><button id="guestNav" class="active">상담 예약</button><button id="lookupNav">예약 조회</button><button id="adminNav">관리자</button></nav></div></header>
 <main class="wrap main"><div id="message" role="status" aria-live="polite"></div>
 <section id="guestView" class="grid"><div><div class="panel"><h2>상담 예약 신청</h2><p class="muted" style="font-size:12px">예약 가능시간은 모든 기기에 실시간으로 반영됩니다.</p><p class="muted">원하시는 상담과 날짜, 시간을 선택해 주세요. 신청 후 선생님이 확인하여 예약을 확정해 드립니다.</p><div class="field"><label for="kind">상담 방식</label><select id="kind"><option value="phone">전화 상담</option><option value="visit">방문 상담</option></select></div><div class="field"><label for="date">상담 희망 날짜</label><input type="date" id="date"></div><div class="dateStatusLegend" aria-label="날짜 상태 안내"><span class="available">● 예약 가능</span><span class="full">● 예약 마감</span><span class="closed">● 휴무·미설정</span></div><div id="guestWeek" class="quickDates" aria-label="날짜별 예약 가능 시간"></div><div id="guestAvailability" class="guestNotice" role="status"></div><h3 style="margin-top:21px">예약 가능한 시간</h3><div id="slots" class="times"></div><div class="calendarLegend">표시된 시간만 신청할 수 있습니다. 예약 승인 전까지는 신청 상태입니다.</div></div><div class="panel"><h3>예약자 정보</h3><div class="row"><div class="field"><label for="name">성함 *</label><input id="name" maxlength="30" autocomplete="name" placeholder="성함"></div><div class="field"><label for="phone">휴대폰 번호 (숫자만) *</label><input id="phone" type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="11" placeholder="01012345678" autocomplete="tel"></div></div><div class="field"><label for="customerPin">예약 비밀번호 (숫자 6자리) *</label><input id="customerPin" type="password" inputmode="numeric" maxlength="6" minlength="6" pattern="[0-9]{6}" autocomplete="off" placeholder="처음 예약 시 설정 / 재예약 시 동일하게 입력"><p class="muted">처음 예약하시는 분은 비밀번호를 정해 주세요. 다음 예약이나 다른 휴대폰에서 조회할 때 같은 번호를 사용합니다. 전화번호 소유 확인은 하지 않습니다.</p></div><div class="field"><label for="memo">전달사항 (선택)</label><textarea id="memo" maxlength="300" rows="3" placeholder="상담 전에 전달할 사항이 있다면 적어 주세요"></textarea></div><div class="field"><label class="flex" style="font-weight:400"><input type="checkbox" id="consent" style="width:auto"> 예약 접수 및 연락을 위한 이름·전화번호·상담일정 수집·보관에 동의합니다.</label></div><button class="primary full" id="apply" style="margin-top:16px">예약 신청하기</button></div></div><aside><div class="panel"><h3>예약 안내</h3><div class="hint">① 원하는 시간을 선택해 신청합니다.<br>② 선생님이 일정을 확인해 승인합니다.<br>③ 예약 조회에서 승인 여부를 확인할 수 있습니다.<br><br>방문·전화 상담 가능 일시와 운영시간은 매일 달라질 수 있습니다.</div></div></aside></section>
 <section id="lookupView" style="display:none"><div class="panel" style="max-width:600px;margin:auto"><h2>내 예약 조회</h2><p class="muted">예약한 이름·전화번호와 예약 비밀번호 6자리를 입력해 주세요. 다른 브라우저에서도 동일하게 조회할 수 있습니다.</p><div class="field"><label for="lookupName">예약자 성함</label><input id="lookupName" maxlength="30" placeholder="예약자 이름" autocomplete="name"></div><div class="field"><label for="lookupPhone">휴대폰 번호 (숫자만)</label><input id="lookupPhone" type="tel" inputmode="numeric" maxlength="11" placeholder="01012345678" autocomplete="tel"></div><div class="field"><label for="lookupPin">예약 비밀번호 6자리</label><input id="lookupPin" type="password" inputmode="numeric" maxlength="6" pattern="[0-9]{6}" autocomplete="off" placeholder="예약할 때 정한 비밀번호"></div><button class="primary full" id="lookup" style="margin-top:16px">조회하기</button><p class="muted" style="margin-top:12px">※ 새 비밀번호 방식으로 예약했거나 기존 익명 예약을 이 브라우저에서 계정에 연결한 경우 조회됩니다. 다른 익명 계정에서 접수한 과거 예약은 선생님께 확인해 주세요. 비밀번호 분실 시 자동 복구는 지원하지 않습니다.</p><div id="lookupResult"></div></div></section>
 <section id="adminView" style="display:none"><div id="loginPanel" class="panel" style="max-width:480px;margin:auto"><h2>관리자 로그인</h2><p class="muted">관리자 전화번호와 비밀번호를 입력해 주세요. 앱을 벗어나면 관리자 화면은 자동으로 잠깁니다.</p><div class="field"><label for="email">관리자 전화번호</label><input id="email" type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="11" autocomplete="tel" placeholder="01012345678"></div><div class="field"><label for="password">관리자 비밀번호</label><input id="password" type="password" autocomplete="off" minlength="6" placeholder="관리자 비밀번호 (6자리 이상)"></div><button class="primary full" id="login" style="margin-top:16px">로그인</button><p class="muted" id="demoTip"></p></div><div id="adminArea"><div class="flex" style="justify-content:space-between;margin-bottom:16px"><h2 style="margin:0">어머님 예약 관리</h2><div class="flex"><button id="backupAll" class="primary" type="button" title="전체 예약과 영업시간을 파일로 저장">⬇ 전체 정보 백업</button><button id="logout" class="secondary">로그아웃</button></div></div><p class="muted" style="margin:-8px 0 16px">백업 파일에는 고객 이름·전화번호가 포함돼요. 안전한 곳에 보관해 주세요.</p><div class="stats"><div class="stat">승인 대기<b id="countPending">0</b></div><div class="stat">오늘 확정<b id="countToday">0</b></div><div class="stat">전체 확정<b id="countAll">0</b></div></div><div class="tabs"><button data-tab="week" class="on">1주일 예약 시간표</button><button data-tab="requests">예약 신청 관리</button><button data-tab="schedule">날짜별 영업시간</button><button data-tab="manual">전화 예약 직접 등록</button></div><div id="weekTab" class="panel"><h3>한눈에 보는 1주일 예약 시간표</h3><p class="muted">어머님이 설정한 날짜별 영업시간에 맞춰 표시됩니다. 파란색은 확정 예약, 노란색은 승인 대기이며 둘 다 고객에게는 예약 불가로 표시됩니다.</p><div class="weekToolbar"><button class="secondary" id="prevWeek">← 지난주</button><strong id="weekTitle"></strong><div class="flex"><button class="secondary" id="thisWeek">이번 주</button><button class="secondary" id="nextWeek">다음 주 →</button></div></div><div class="weekLegend"><span style="background:#f0f7ef">예약 가능</span><span style="background:#e7eff9">확정 예약</span><span style="background:#fff0d7">승인 대기 · 잠금</span><span style="background:#f7f6f3">휴무/영업시간 외</span></div><div id="weekSummary" class="weekSummary" aria-label="요일별 예약 현황"></div><div id="weekCalendar" class="weekScroll"></div><p class="weekHint">좌우로 스크롤하면 일주일 전체를 볼 수 있어요. 날짜 제목을 누르면 해당 날짜의 영업시간을 바로 변경할 수 있습니다.</p></div><div id="requestsTab" class="panel" style="display:none"><h3>예약 신청 내역</h3><div class="flex"><label for="filterDate">날짜 필터</label><input type="date" id="filterDate" style="padding:8px;border:1px solid #ddd;border-radius:8px"><button class="secondary" id="clearFilter">전체 보기</button></div><div id="requests"></div></div><div id="scheduleTab" class="panel" style="display:none"><h3>날짜별 영업시간 설정</h3><p class="muted">날짜를 선택하고 그날의 전화·방문 상담 가능 시간과 상담 간격을 직접 지정하세요. 매일 다르게 정할 수 있습니다.</p><div class="field"><label for="settingDate">설정할 날짜</label><input id="settingDate" type="date"></div><div class="field"><label for="settingMode">상담 가능 방식</label><select id="settingMode"><option value="closed">휴무 / 예약 받지 않음</option><option value="phone">전화 상담만</option><option value="visit">방문 상담만</option><option value="both">전화·방문 모두</option></select></div><div class="row"><div class="field"><label for="start">시작 시간</label><input id="start" type="time" value="09:00"></div><div class="field"><label for="end">종료 시간</label><input id="end" type="time" value="18:00"></div></div><div class="row"><div class="field"><label for="interval">예약 간격</label><select id="interval"><option value="15">15분</option><option value="20">20분</option><option value="30" selected>30분</option><option value="40">40분</option><option value="60">60분</option><option value="90">90분</option><option value="120">120분</option></select></div><div class="field"><label for="buffer">상담 사이 여유시간</label><select id="buffer"><option value="0">없음</option><option value="10">10분</option><option value="15">15분</option><option value="30">30분</option></select></div></div><button class="primary full" id="saveSchedule" style="margin-top:18px">이 날짜 영업시간 저장</button><p class="muted">미설정 날짜는 휴무로 표시됩니다. 이미 확정된 예약이 있는 시간은 운영시간 변경만으로 취소되지 않습니다.</p><h3 style="margin-top:25px">최근 설정한 날짜</h3><div id="scheduleList"></div></div><div id="manualTab" class="panel" style="display:none"><h3>전화·문자로 받은 기존 예약 입력</h3><div class="row"><div class="field"><label for="manualName">고객 성함</label><input id="manualName" maxlength="30"></div><div class="field"><label for="manualPhone">전화번호</label><input id="manualPhone" type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="11" placeholder="01012345678"></div></div><div class="row"><div class="field"><label for="manualDate">상담 날짜</label><input id="manualDate" type="date"></div><div class="field"><label for="manualTime">상담 시간</label><input id="manualTime" type="time"></div></div><div class="field"><label for="manualKind">상담 방식</label><select id="manualKind"><option value="phone">전화 상담</option><option value="visit">방문 상담</option></select></div><button class="primary full" id="manualSave" style="margin-top:17px">확정 예약 등록하기</button></div></div></section>
-</main><dialog id="bookingConfirm" class="bookingConfirm" aria-labelledby="bookingConfirmTitle"><div class="inside"><div class="successIcon" aria-hidden="true">✓</div><h2 id="bookingConfirmTitle">예약 신청이 접수되었습니다!</h2><div id="confirmDetails" class="details"></div><p class="explain">현재는 <b>승인 대기</b> 상태입니다. 선생님이 확인한 뒤 예약이 확정됩니다. 신청한 시간은 다른 고객에게 예약 불가로 표시됩니다.</p><button id="confirmClose" class="primary full" type="button">확인했어요</button></div></dialog><footer>© 신지암신통사주 · v6.0 · Firebase 실시간 예약관리</footer>
+</main><dialog id="bookingConfirm" class="bookingConfirm" aria-labelledby="bookingConfirmTitle"><div class="inside"><div class="successIcon" aria-hidden="true">✓</div><h2 id="bookingConfirmTitle">예약 신청이 접수되었습니다!</h2><div id="confirmDetails" class="details"></div><p class="explain">현재는 <b>승인 대기</b> 상태입니다. 선생님이 확인한 뒤 예약이 확정됩니다. 신청한 시간은 다른 고객에게 예약 불가로 표시됩니다.</p><button id="confirmClose" class="primary full" type="button">확인했어요</button></div></dialog><footer>© 신지암신통사주 · v6.1 · Firebase 실시간 예약관리</footer>
 <script type="module">
 /* Firebase config: replace with values from Firebase console to enable shared live data. */
 const FIREBASE_CONFIG = {
@@ -68,9 +68,9 @@ const FIREBASE_CONFIG = {
 const DEMO = false;
 // 실시간 공유와 접근 제어는 함께 제공하는 firestore.rules 게시 후 작동합니다.
 const $=id=>document.getElementById(id), today=()=>new Date(Date.now()-new Date().getTimezoneOffset()*60000).toISOString().slice(0,10);
-let db=null,auth=null,fs=null,authMethods=null,currentUser=null,activeSlot=null,settings=[],bookings=[],locks=[],ownBookings=[],currentView='guest',adminTab='week',unsubscribers=[],ready=false,authChanging=false;
+let db=null,auth=null,fs=null,authMethods=null,currentUser=null,activeSlot=null,bookingSubmitting=false,settings=[],bookings=[],locks=[],ownBookings=[],currentView='guest',adminTab='week',unsubscribers=[],ready=false,authChanging=false;
 const escapeHtml=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const kindLabel=k=>k==='phone'?'전화 상담':'방문 상담';const localKey='sintong-demo-v1';let weekStart=null;
+const kindLabel=k=>k==='phone'?'전화 상담':'방문 상담';const localKey='sintong-demo-v1';let weekStart=null,lastRenderedSlotDate=null;
 function loadDemo(){try{return JSON.parse(localStorage.getItem(localKey))||{settings:[],bookings:[]}}catch{return {settings:[],bookings:[]}}}
 function saveDemo(){localStorage.setItem(localKey,JSON.stringify({settings,bookings}))}
 const message=(s,error=false)=>{$('message').innerHTML=`<div class="notice ${error?'error':''}">${escapeHtml(s)}</div>`;window.scrollTo({top:0,behavior:'smooth'});setTimeout(()=>{$('message').innerHTML=''},6500)};
@@ -117,6 +117,8 @@ function renderGuestWeek(){
 }
 function renderSlots(){
  const date=$('date').value,s=settings.find(x=>x.date===date);
+ const oldSlot=activeSlot && lastRenderedSlotDate===date ? {...activeSlot}:null;
+ lastRenderedSlotDate=date;
  if(s&&s.mode==='visit'&&$('kind').value==='phone')$('kind').value='visit';
  else if(s&&s.mode==='phone'&&$('kind').value==='visit')$('kind').value='phone';
  const kind=$('kind').value;
@@ -137,6 +139,7 @@ function renderSlots(){
  button.textContent=locked?slot.time+' 🔒 마감':slot.time;
  button.disabled=locked;button.classList.toggle('locked',locked);
  button.title=locked?'이미 신청 또는 확정된 예약이 있습니다.':'예약 신청 가능';
+ if(!locked && oldSlot && oldSlot.time===slot.time && oldSlot.end===slot.end){activeSlot=slot;button.classList.add('selected')}
  button.onclick=()=>{activeSlot=slot;document.querySelectorAll('.time').forEach(el=>el.classList.remove('selected'));button.classList.add('selected')};
  $('slots').appendChild(button)}
 }
@@ -190,44 +193,55 @@ function refresh(){renderSlots();renderAdmin();}
 const customerEmail=number=>phoneDigits(number)+'@guest.sintong-saju.app';
 const validPin=pin=>/^[0-9]{6}$/.test(pin);
 async function customerLogin(phone,pin,create){
+ if(!validPhone(phone)||!validPin(pin))throw Error('휴대폰 번호와 6자리 예약 비밀번호를 확인해 주세요.');
+ const email=customerEmail(phone),u=auth.currentUser;
  authChanging=true;
  try {
- if(!validPhone(phone)||!validPin(pin))throw Error('휴대폰 번호와 숫자 6자리 비밀번호를 확인해 주세요.');
- const email=customerEmail(phone);
- const u=auth.currentUser;
- if(u&&!u.isAnonymous&&u.email===email){
-   // 같은 계정이어도 비밀번호를 실제 Firebase에 다시 검증한다.
-   const result=await authMethods.signInWithEmailAndPassword(auth,email,pin);
-   currentUser=null;ready=true;subscribeData(result.user);return result.user;
- }
- if(create&&u?.isAnonymous){
+  // Existing customer: re-authenticate without replacing the session, which could
+  // reset the selected slot and trigger a duplicate background auth subscription.
+  if(u && !u.isAnonymous && u.email===email){
+   const cred=authMethods.EmailAuthProvider.credential(email,pin);
+   await authMethods.reauthenticateWithCredential(u,cred);
+   currentUser=null;ready=true;
+   return auth.currentUser;
+  }
+  if(create && u?.isAnonymous){
    try{
-     const credential=authMethods.EmailAuthProvider.credential(email,pin);
-     const result=await authMethods.linkWithCredential(u,credential);
-     currentUser=null;ready=true;subscribeData(result.user);return result.user;
+    const cred=authMethods.EmailAuthProvider.credential(email,pin);
+    const linked=await authMethods.linkWithCredential(u,cred);
+    // Ensure the upgraded anonymous user now has a password-provider token.
+    await linked.user.getIdToken(true);
+    currentUser=null;ready=true;
+    subscribeData(linked.user);
+    return linked.user;
    }catch(e){
-     // 이미 이 번호로 가입했다면 기존 계정의 비밀번호를 확인해 로그인한다.
-     if(!['auth/email-already-in-use','auth/credential-already-in-use'].includes(e.code))throw e;
+    if(!['auth/email-already-in-use','auth/credential-already-in-use'].includes(e.code))throw e;
    }
- }
- try{
-   const result=await authMethods.signInWithEmailAndPassword(auth,email,pin);
-   currentUser=null;ready=true;subscribeData(result.user);return result.user;
- }catch(e){
-   if(!create&&['auth/invalid-credential','auth/user-not-found'].includes(e.code))throw Error('예약 계정을 찾을 수 없거나 비밀번호가 맞지 않습니다.');
-   throw e;
- }
-} finally {authChanging=false;}
+  }
+  // Sign into the same customer UID on every phone and browser.
+  const result=await authMethods.signInWithEmailAndPassword(auth,email,pin);
+  currentUser=null;ready=true;
+  subscribeData(result.user);
+  return result.user;
+ } catch(e){
+  if(['auth/invalid-credential','auth/user-not-found','auth/wrong-password','auth/invalid-login-credentials'].includes(e.code)){
+   throw Error(create?'이미 등록된 번호라면 처음 설정한 6자리 비밀번호를 입력해 주세요.':'전화번호에 해당하는 예약 계정이 없거나 비밀번호가 일치하지 않습니다.');
+  }
+  if(e.code==='auth/too-many-requests')throw Error('로그인 시도가 많아 잠시 제한되었습니다. 나중에 다시 시도해 주세요.');
+  if(e.code==='auth/operation-not-allowed')throw Error('Firebase 이메일/비밀번호 로그인이 비활성화되어 있습니다. 관리자에게 문의해 주세요.');
+  throw e;
+ } finally {authChanging=false;}
 }
 async function lookupBookings(name,phone){
- if(!auth.currentUser)throw Error('고객 로그인이 필요합니다.');
- const target=phoneDigits(phone),person=name.trim();
- // 이 고객 인증 계정이 실제로 소유하는 예약만 Firestore 규칙에서 조회할 수 있다.
- const q=fs.query(fs.collection(db,'bookings'),fs.where('ownerUid','==',auth.currentUser.uid));
- const snapshot=await fs.getDocs(q);
+ const u=auth.currentUser;
+ if(!u||u.isAnonymous||u.email!==customerEmail(phone))throw Error('고객 계정 로그인 정보를 다시 확인해 주세요.');
+ const q=fs.query(fs.collection(db,'bookings'),fs.where('ownerUid','==',u.uid));
+ // Request the current server data rather than the previous anonymous session cache.
+ const snapshot=await fs.getDocsFromServer(q);
+ const target=phoneDigits(phone),person=name.trim().replace(/\s+/g,'');
  return snapshot.docs.map(d=>({id:d.id,...d.data()}))
-   .filter(b=>b.name.trim()===person&&phoneDigits(b.phone)===target)
-   .sort((a,b)=>b.date.localeCompare(a.date)||b.time.localeCompare(a.time));
+   .filter(b=>String(b.name||'').trim().replace(/\s+/g,'')===person&&phoneDigits(b.phone)===target)
+   .sort((a,b)=>String(b.date).localeCompare(String(a.date))||String(b.time).localeCompare(String(a.time)));
 }
 function subscribeData(u){
  unsubscribers.forEach(fn=>fn());unsubscribers=[];
@@ -252,7 +266,27 @@ function showBookingConfirmation(b){
  else{dialog.setAttribute('open','');dialog.scrollIntoView({behavior:'smooth',block:'center'})}
 }
 $('confirmClose').onclick=()=>{const dialog=$('bookingConfirm');if(typeof dialog.close==='function')dialog.close();else dialog.removeAttribute('open')};
-$('apply').onclick=async()=>{const name=$('name').value.trim(),phone=$('phone').value.trim(),pin=$('customerPin').value,date=$('date').value,kind=$('kind').value;if(!activeSlot)return message('상담 시간을 선택해 주세요.',true);if(!name||!validPhone(phone))return message('성함과 올바른 휴대폰 번호를 숫자만 입력해 주세요.',true);if(!validPin(pin))return message('숫자 6자리 예약 비밀번호를 입력해 주세요.',true);if(!$('consent').checked)return message('개인정보 수집 동의가 필요합니다.',true);if(date<today())return message('지난 날짜는 신청할 수 없습니다.',true);let id=crypto.randomUUID(),code=ident();const b={id,code,name,phone,kind,date,time:activeSlot.time,end:activeSlot.end,memo:$('memo').value.trim().slice(0,200),status:'pending',createdAt:new Date().toISOString(),manual:false};try{await customerLogin(phone,pin,true);await createBooking(b);$('name').value='';$('phone').value='';$('memo').value='';$('customerPin').value='';$('consent').checked=false;renderSlots();showBookingConfirmation(b)}catch(e){message(e.message||'예약 신청에 실패했습니다.',true)}};
+$('apply').onclick=async()=>{
+ if(bookingSubmitting)return;
+ const name=$('name').value.trim(),phone=phoneDigits($('phone').value),pin=$('customerPin').value,date=$('date').value,kind=$('kind').value;
+ const slot=activeSlot?{...activeSlot}:null;
+ if(!slot)return message('상담 시간을 선택해 주세요.',true);
+ if(!name||!validPhone(phone))return message('성함과 올바른 휴대폰 번호를 숫자만 입력해 주세요.',true);
+ if(!validPin(pin))return message('숫자 6자리 예약 비밀번호를 입력해 주세요.',true);
+ if(!$('consent').checked)return message('개인정보 수집 동의가 필요합니다.',true);
+ if(date<today())return message('지난 날짜는 신청할 수 없습니다.',true);
+ const setting=settings.find(x=>x.date===date);
+ if(!setting||!modeAllows(setting.mode,kind)||!slotsFor(setting).some(x=>x.time===slot.time&&x.end===slot.end))return message('선택한 시간이 변경됐습니다. 다시 선택해 주세요.',true);
+ const b={id:crypto.randomUUID(),code:ident(),name,phone,kind,date,time:slot.time,end:slot.end,memo:$('memo').value.trim().slice(0,200),status:'pending',createdAt:new Date().toISOString(),manual:false};
+ const btn=$('apply');bookingSubmitting=true;btn.disabled=true;btn.textContent='예약 접수 중…';
+ try{
+  await customerLogin(phone,pin,true);
+  await createBooking(b);
+  $('name').value='';$('phone').value='';$('memo').value='';$('customerPin').value='';$('consent').checked=false;
+  activeSlot=null;renderSlots();showBookingConfirmation(b);
+ }catch(e){message('예약 접수 실패: '+(e.message||'잠시 후 다시 시도해 주세요.'),true)}
+ finally{bookingSubmitting=false;btn.disabled=false;btn.textContent='예약 신청하기'}
+};
 $('lookup').onclick=async()=>{
  const lookupButton=$('lookup');if(lookupButton.disabled)return;
  const name=$('lookupName').value.trim(),phone=phoneDigits($('lookupPhone').value),pin=$('lookupPin').value;
@@ -262,7 +296,7 @@ $('lookup').onclick=async()=>{
   if(!validPin(pin))return message('예약 비밀번호 6자리를 입력해 주세요.',true);
   await customerLogin(phone,pin,false);
   const results=await lookupBookings(name,phone);
-  $('lookupResult').innerHTML=results.length?results.map(b=>`<div class="item"><strong>${escapeHtml(name)}님</strong><span class="pill ${escapeHtml(b.status)}" style="margin-left:10px">${{pending:'승인 대기',approved:'예약 확정',rejected:'예약 거절',cancelled:'예약 취소'}[b.status]||escapeHtml(b.status)}</span><p>${escapeHtml(b.date)} ${escapeHtml(b.time)} · ${kindLabel(b.kind)}</p></div>`).join(''):'<p class="notice error">일치하는 예약 내역이 없습니다. 이름과 전화번호를 확인해 주세요.</p>';
+  $('lookupResult').innerHTML=results.length?results.map(b=>`<div class="item"><strong>${escapeHtml(name)}님</strong><span class="pill ${escapeHtml(b.status)}" style="margin-left:10px">${{pending:'승인 대기',approved:'예약 확정',rejected:'예약 거절',cancelled:'예약 취소'}[b.status]||escapeHtml(b.status)}</span><p>${escapeHtml(b.date)} ${escapeHtml(b.time)} · ${kindLabel(b.kind)}</p></div>`).join(''):'<p class="notice error">이 계정에 일치하는 예약이 없습니다. 이전에 익명으로 예약한 건은 선생님께 확인해 주세요.</p>';
  }catch(e){message('조회에 실패했습니다. '+(e.code==='functions/resource-exhausted'?'조회 요청이 많습니다. 잠시 후 다시 시도해 주세요.':e.message),true)}
  finally{lookupButton.disabled=false;lookupButton.textContent='예약 조회하기'}
 };
