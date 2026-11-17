@@ -7,7 +7,7 @@ service cloud.firestore {
     && exists(/databases/$(database)/documents/admins/$(request.auth.uid))
     && get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.enabled == true;
   }
-  function anon() { return signed() && request.auth.token.firebase.sign_in_provider == 'anonymous'; }
+  function customer() { return signed() && (request.auth.token.firebase.sign_in_provider == 'anonymous' || (request.auth.token.firebase.sign_in_provider == 'password' && request.auth.token.email.matches('^[0-9]{10,11}@guest[.]sintong-saju[.]app$'))); }
   function validPhone(p) { return p is string && p.matches('^01[016789][0-9]{7,8}$'); }
   function validDate(d) { return d is string && d.matches('^20[0-9]{2}-[0-9]{2}-[0-9]{2}$'); }
   function validTime(t) { return t is string && t.matches('^([01][0-9]|2[0-3]):[0-5][0-9]$'); }
@@ -38,7 +38,7 @@ service cloud.firestore {
       && b.kind in ['phone','visit'] && validDate(b.date)
       && validTime(b.time) && validTime(b.end) && b.time < b.end
       && b.createdAt is string && b.manual is bool
-      && ((anon() && b.status=='pending' && b.manual == false) || (admin() && b.status == 'approved' && b.manual == true))
+      && ((customer() && b.status=='pending' && b.manual == false) || (admin() && b.status == 'approved' && b.manual == true))
       && exists(/databases/$(database)/documents/settings/$(b.date))
       && get(/databases/$(database)/documents/settings/$(b.date)).data.mode in [b.kind,'both']
       && b.time >= get(/databases/$(database)/documents/settings/$(b.date)).data.start
@@ -48,8 +48,15 @@ service cloud.firestore {
     allow get, list: if admin() || (signed() && resource.data.ownerUid == request.auth.uid);
     allow create: if signed() && validBooking(request.resource.data,id)
       && getAfter(/databases/$(database)/documents/slotLocks/$(request.resource.data.date + '_' + request.resource.data.time)).data.bookingId == id;
-    allow update: if admin() && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status'])
-      && request.resource.data.status in ['pending','approved','rejected','cancelled'];
+    allow update: if (
+      (admin() && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status'])
+        && request.resource.data.status in ['pending','approved','rejected','cancelled'])
+      || (customer() && resource.data.ownerUid == request.auth.uid
+        && resource.data.status in ['pending','approved']
+        && request.resource.data.status == 'cancelled'
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status'])
+        && !existsAfter(/databases/$(database)/documents/slotLocks/$(resource.data.date + '_' + resource.data.time)))
+    );
     allow delete: if false;
   }
   match /slotLocks/{id} {
@@ -67,7 +74,10 @@ service cloud.firestore {
       && getAfter(/databases/$(database)/documents/bookings/$(request.resource.data.bookingId)).data.status == request.resource.data.status;
     allow update: if admin() && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status'])
       && request.resource.data.status == 'approved';
-    allow delete: if admin();
+    allow delete: if admin() || (customer()
+      && existsAfter(/databases/$(database)/documents/bookings/$(resource.data.bookingId))
+      && getAfter(/databases/$(database)/documents/bookings/$(resource.data.bookingId)).data.ownerUid == request.auth.uid
+      && getAfter(/databases/$(database)/documents/bookings/$(resource.data.bookingId)).data.status == 'cancelled');
   }
   match /{doc=**} { allow read, write: if false; }
  }
