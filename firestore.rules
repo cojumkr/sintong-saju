@@ -1,30 +1,9 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    function admin() { return request.auth != null && request.auth.token.email == 'REPLACE_WITH_ADMIN_EMAIL'; }
-    match /settings/{day} {
-      allow read: if true;
-      allow write: if admin();
-    }
-    match /slotLocks/{slot} {
-      allow read: if true;
-      allow create: if request.resource.data.keys().hasOnly(['bookingId','date','time'])
-        && request.resource.data.bookingId is string && request.resource.data.date is string
-        && request.resource.data.time is string;
-      allow delete: if admin();
-      allow update: if false;
-    }
-    match /bookings/{bookingId} {
-      allow read: if admin();
-      allow create: if request.resource.data.keys().hasOnly(['id','code','name','phone','kind','date','time','end','memo','status','createdAt','manual'])
-        && request.resource.data.id == bookingId
-        && request.resource.data.status == 'pending'
-        && request.resource.data.manual == false
-        && request.resource.data.name is string && request.resource.data.name.size() <= 30
-        && request.resource.data.phone is string && request.resource.data.phone.size() <= 20
-        && request.resource.data.memo is string && request.resource.data.memo.size() <= 300
-        && request.resource.data.kind in ['phone','visit'];
-      allow update, delete: if admin();
+    // 연동 점검용 안전한 초기 규칙: 실제 예약 처리 구현 전까지 모든 접근 차단
+    match /{document=**} {
+      allow read, write: if false;
     }
   }
 }
