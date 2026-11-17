@@ -1,9 +1,74 @@
 rules_version = '2';
 service cloud.firestore {
-  match /databases/{database}/documents {
-    // 연동 점검용 안전한 초기 규칙: 실제 예약 처리 구현 전까지 모든 접근 차단
-    match /{document=**} {
-      allow read, write: if false;
-    }
+ match /databases/{database}/documents {
+  function signed() { return request.auth != null; }
+  function admin() {
+   return signed() && request.auth.token.firebase.sign_in_provider == 'password'
+    && exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+    && get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.enabled == true;
   }
+  function anon() { return signed() && request.auth.token.firebase.sign_in_provider == 'anonymous'; }
+  function validPhone(p) { return p is string && p.matches('^01[016789][0-9]{7,8}$'); }
+  function validDate(d) { return d is string && d.matches('^20[0-9]{2}-[0-9]{2}-[0-9]{2}$'); }
+  function validTime(t) { return t is string && t.matches('^([01][0-9]|2[0-3]):[0-5][0-9]$'); }
+  match /admins/{uid} {
+    allow get: if signed() && request.auth.uid == uid;
+    allow list, create, update, delete: if false;
+  }
+  match /settings/{date} {
+    allow read: if signed();
+    allow create, update: if admin()
+      && request.resource.data.keys().hasAll(['date','mode','start','end','interval','buffer'])
+      && request.resource.data.keys().hasOnly(['date','mode','start','end','interval','buffer'])
+      && request.resource.data.date == date && validDate(date)
+      && request.resource.data.mode in ['closed','phone','visit','both']
+      && validTime(request.resource.data.start) && validTime(request.resource.data.end)
+      && request.resource.data.start < request.resource.data.end
+      && request.resource.data.interval in [15,20,30,40,60,90,120]
+      && request.resource.data.buffer in [0,10,15,30];
+    allow delete: if admin();
+  }
+  function validBooking(b,id) {
+    return b.keys().hasAll(['id','code','ownerUid','name','phone','kind','date','time','end','memo','status','createdAt','manual'])
+      && b.keys().hasOnly(['id','code','ownerUid','name','phone','kind','date','time','end','memo','status','createdAt','manual'])
+      && b.id == id && b.ownerUid == request.auth.uid
+      && b.name is string && b.name.size()>0 && b.name.size()<=30
+      && validPhone(b.phone) && b.memo is string && b.memo.size()<=200
+      && b.code is string && b.code.size()<=30
+      && b.kind in ['phone','visit'] && validDate(b.date)
+      && validTime(b.time) && validTime(b.end) && b.time < b.end
+      && b.createdAt is string && b.manual is bool
+      && ((anon() && b.status=='pending' && b.manual == false) || (admin() && b.status == 'approved' && b.manual == true))
+      && exists(/databases/$(database)/documents/settings/$(b.date))
+      && get(/databases/$(database)/documents/settings/$(b.date)).data.mode in [b.kind,'both']
+      && b.time >= get(/databases/$(database)/documents/settings/$(b.date)).data.start
+      && b.end <= get(/databases/$(database)/documents/settings/$(b.date)).data.end;
+  }
+  match /bookings/{id} {
+    allow get, list: if admin() || (signed() && resource.data.ownerUid == request.auth.uid);
+    allow create: if signed() && validBooking(request.resource.data,id)
+      && getAfter(/databases/$(database)/documents/slotLocks/$(request.resource.data.date + '_' + request.resource.data.time)).data.bookingId == id;
+    allow update: if admin() && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status'])
+      && request.resource.data.status in ['pending','approved','rejected','cancelled'];
+    allow delete: if false;
+  }
+  match /slotLocks/{id} {
+    allow read: if signed();
+    allow create: if signed()
+      && request.resource.data.keys().hasAll(['bookingId','date','time','end','kind','status'])
+      && request.resource.data.keys().hasOnly(['bookingId','date','time','end','kind','status'])
+      && id == request.resource.data.date + '_' + request.resource.data.time
+      && request.resource.data.status in ['pending','approved']
+      && getAfter(/databases/$(database)/documents/bookings/$(request.resource.data.bookingId)).data.ownerUid == request.auth.uid
+      && getAfter(/databases/$(database)/documents/bookings/$(request.resource.data.bookingId)).data.date == request.resource.data.date
+      && getAfter(/databases/$(database)/documents/bookings/$(request.resource.data.bookingId)).data.time == request.resource.data.time
+      && getAfter(/databases/$(database)/documents/bookings/$(request.resource.data.bookingId)).data.end == request.resource.data.end
+      && getAfter(/databases/$(database)/documents/bookings/$(request.resource.data.bookingId)).data.kind == request.resource.data.kind
+      && getAfter(/databases/$(database)/documents/bookings/$(request.resource.data.bookingId)).data.status == request.resource.data.status;
+    allow update: if admin() && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status'])
+      && request.resource.data.status == 'approved';
+    allow delete: if admin();
+  }
+  match /{doc=**} { allow read, write: if false; }
+ }
 }
