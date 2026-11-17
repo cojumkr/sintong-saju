@@ -59,6 +59,24 @@ service cloud.firestore {
     );
     allow delete: if false;
   }
+  match /manualBlocks/{id} {
+    allow get, list: if admin();
+    allow create: if admin()
+      && request.resource.data.keys().hasAll(['id','date','name','time','end','createdAt'])
+      && request.resource.data.keys().hasOnly(['id','date','name','time','end','createdAt'])
+      && request.resource.data.id == id
+      && id == request.resource.data.date + '_' + request.resource.data.time
+      && validDate(request.resource.data.date)
+      && validTime(request.resource.data.time) && validTime(request.resource.data.end)
+      && request.resource.data.time < request.resource.data.end
+      && request.resource.data.name is string
+      && request.resource.data.name.size() > 0 && request.resource.data.name.size() <= 30
+      && request.resource.data.createdAt is string
+      && getAfter(/databases/$(database)/documents/slotLocks/$(id)).data.bookingId == id;
+    allow update: if false;
+    allow delete: if admin()
+      && !existsAfter(/databases/$(database)/documents/slotLocks/$(id));
+  }
   match /slotLocks/{id} {
     allow read: if signed();
     allow create: if signed()
@@ -66,12 +84,17 @@ service cloud.firestore {
       && request.resource.data.keys().hasOnly(['bookingId','date','time','end','kind','status'])
       && id == request.resource.data.date + '_' + request.resource.data.time
       && request.resource.data.status in ['pending','approved']
-      && getAfter(/databases/$(database)/documents/bookings/$(request.resource.data.bookingId)).data.ownerUid == request.auth.uid
+      && ((admin() && request.resource.data.status == 'approved'
+        && request.resource.data.kind == 'both'
+        && request.resource.data.bookingId == id
+        && getAfter(/databases/$(database)/documents/manualBlocks/$(id)).data.id == id
+        && getAfter(/databases/$(database)/documents/manualBlocks/$(id)).data.end == request.resource.data.end)
+       || (getAfter(/databases/$(database)/documents/bookings/$(request.resource.data.bookingId)).data.ownerUid == request.auth.uid
       && getAfter(/databases/$(database)/documents/bookings/$(request.resource.data.bookingId)).data.date == request.resource.data.date
       && getAfter(/databases/$(database)/documents/bookings/$(request.resource.data.bookingId)).data.time == request.resource.data.time
       && getAfter(/databases/$(database)/documents/bookings/$(request.resource.data.bookingId)).data.end == request.resource.data.end
       && getAfter(/databases/$(database)/documents/bookings/$(request.resource.data.bookingId)).data.kind == request.resource.data.kind
-      && getAfter(/databases/$(database)/documents/bookings/$(request.resource.data.bookingId)).data.status == request.resource.data.status;
+      && getAfter(/databases/$(database)/documents/bookings/$(request.resource.data.bookingId)).data.status == request.resource.data.status));
     allow update: if admin() && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status'])
       && request.resource.data.status == 'approved';
     allow delete: if admin() || (customer()
